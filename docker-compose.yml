@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:15.1
+    volumes:
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+      - ./postgres_microservice_back:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: reports
+      POSTGRES_PASSWORD: reports
+      POSTGRES_DB:  reports
+    restart: unless-stopped
+
+  back:
+    build: ais_msrv_reports/
+    #like ais_mfr_contacts/
+    command: npm run start:prod
+    ports:
+      - 48150:80
+    depends_on:
+      - postgres
+    #  - front
+
+#  front:
+#     build: */ 
